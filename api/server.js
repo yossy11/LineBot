@@ -10,12 +10,6 @@ const config = {
   channelAccessToken: process.env.ACCESSTOKEN,
 };
 
-// const config = {
-//   channelSecret: "e789dde58c5d44eb3682661bc6dac198",
-//   channelAccessToken:
-//     "dMIDrt8yE+l4Y41sIi8tZZXGOiQsZlmhHLDA3mEDO4XlTaXOms8t/gFO2Wjwd9FXSLHK5L5ux0iTAkKkLIk7WkOIXNNY3YHYYii394pgKw9NKZVYyt5N1AQJpFBjck/jm2VCLDLr38KBFEdHKoy7IQdB04t89/1O/w1cDnyilFU=",
-// };
-
 const app = express();
 
 app.get("/", (req, res) => res.send("Hello LINE BOT!(GET)")); //ブラウザ確認用(無くても問題ない)
@@ -50,7 +44,5 @@ async function handleEvent(event) {
   });
 }
 
-// app.listen(PORT);
-// console.log(`Server running at ${PORT}`);
 process.env.NOW_REGION ? (module.exports = app) : app.listen(PORT);
 console.log(`Server running at ${PORT}`);
