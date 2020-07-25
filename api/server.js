@@ -2,7 +2,10 @@
 
 const express = require("express");
 const line = require("@line/bot-sdk");
+const request = require("request");
+const parseString = require("xml2js").parseString;
 const PORT = 3000;
+const url = "http://www.drk7.jp/weather/xml/12.xml";
 process.env.PORT;
 
 const config = {
@@ -12,20 +15,9 @@ const config = {
 
 const app = express();
 
-app.get("/", (req, res) => res.send("Hello LINE BOT!(GET)")); //ブラウザ確認用(無くても問題ない)
+app.get("/", (req, res) => res.send("Hello LINE BOT!(GET)"));
 app.post("/webhook", line.middleware(config), (req, res) => {
   console.log(req.body.events);
-
-  //ここのif分はdeveloper consoleの"接続確認"用なので削除して問題ないです。
-  if (
-    req.body.events[0].replyToken === "00000000000000000000000000000000" &&
-    req.body.events[1].replyToken === "ffffffffffffffffffffffffffffffff"
-  ) {
-    res.send("Hello LINE BOT!(POST)");
-    console.log("疎通確認用");
-    return;
-  }
-
   Promise.all(req.body.events.map(handleEvent)).then((result) =>
     res.json(result)
   );
@@ -37,10 +29,51 @@ async function handleEvent(event) {
   if (event.type !== "message" || event.message.type !== "text") {
     return Promise.resolve(null);
   }
-
+  const message = makeText(event.message.text);
   return client.replyMessage(event.replyToken, {
     type: "text",
-    text: event.message.text, //実際に返信の言葉を入れる箇所
+    text: message,
+  });
+}
+
+function makeText(text) {
+  if (text === "天気") {
+    const message = getWeather();
+    return message;
+  } else {
+    return text;
+  }
+}
+
+async function getWeather() {
+  request(url, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      parseString(body, function (err, result) {
+        const day =
+          result.weatherforecast.pref[0].area[1].info[0]["$"].date + "\n";
+        const weather =
+          result.weatherforecast.pref[0].area[1].info[0].weather[0] + "\n";
+        const detail =
+          result.weatherforecast.pref[0].area[1].info[0].weather_detail[0] +
+          "\n";
+        const max =
+          "最高気温は" +
+          result.weatherforecast.pref[0].area[1].info[0].temperature[0].range[0]
+            ._ +
+          "度\n";
+        const min =
+          "最低気温は" +
+          result.weatherforecast.pref[0].area[1].info[0].temperature[0].range[1]
+            ._ +
+          "度です";
+        const message =
+          "今日の天気予報です\n" + day + weather + detail + max + min;
+        console.log(message);
+        return message;
+      });
+    } else {
+      console.log(error + " : " + response);
+    }
   });
 }
 
