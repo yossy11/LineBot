@@ -28,16 +28,16 @@ async function handleEvent(event) {
   if (event.type !== "message" || event.message.type !== "text") {
     return Promise.resolve(null);
   }
-  const message = makeText(event.message.text);
+  const message = await makeText(event.message.text);
   return client.replyMessage(event.replyToken, {
     type: "text",
     text: message,
   });
 }
 
-function makeText(text) {
+async function makeText(text) {
   if (text === "天気") {
-    const message = getWeather();
+    const message = await getWeather();
     return message;
   } else {
     return text;
