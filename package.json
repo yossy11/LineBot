@@ -1,0 +1,11 @@
+{
+  "name": "LineBot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "yossy11 <srnnds50aky1@yahoo.co.jp>",
+  "license": "MIT",
+  "dependencies": {
+    "@line/bot-sdk": "^7.0.0",
+    "express": "^4.17.1"
+  }
+}
