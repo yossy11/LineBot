@@ -5,16 +5,16 @@ const line = require("@line/bot-sdk");
 const PORT = 3000;
 process.env.PORT;
 
-// const config = {
-//   channelSecret: process.env.SECRET,
-//   channelAccessToken: process.env.ACCESSTOKEN,
-// };
-
 const config = {
-  channelSecret: "e789dde58c5d44eb3682661bc6dac198",
-  channelAccessToken:
-    "dMIDrt8yE+l4Y41sIi8tZZXGOiQsZlmhHLDA3mEDO4XlTaXOms8t/gFO2Wjwd9FXSLHK5L5ux0iTAkKkLIk7WkOIXNNY3YHYYii394pgKw9NKZVYyt5N1AQJpFBjck/jm2VCLDLr38KBFEdHKoy7IQdB04t89/1O/w1cDnyilFU=",
+  channelSecret: process.env.SECRET,
+  channelAccessToken: process.env.ACCESSTOKEN,
 };
+
+// const config = {
+//   channelSecret: "e789dde58c5d44eb3682661bc6dac198",
+//   channelAccessToken:
+//     "dMIDrt8yE+l4Y41sIi8tZZXGOiQsZlmhHLDA3mEDO4XlTaXOms8t/gFO2Wjwd9FXSLHK5L5ux0iTAkKkLIk7WkOIXNNY3YHYYii394pgKw9NKZVYyt5N1AQJpFBjck/jm2VCLDLr38KBFEdHKoy7IQdB04t89/1O/w1cDnyilFU=",
+// };
 
 const app = express();
 
