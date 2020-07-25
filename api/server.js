@@ -6,7 +6,6 @@ const request = require("request");
 const parseString = require("xml2js").parseString;
 const PORT = 3000;
 const url = "http://www.drk7.jp/weather/xml/12.xml";
-process.env.PORT;
 
 const config = {
   channelSecret: process.env.SECRET,
