@@ -45,34 +45,36 @@ function makeText(text) {
 }
 
 async function getWeather() {
-  request(url, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      parseString(body, function (err, result) {
-        const day =
-          result.weatherforecast.pref[0].area[1].info[0]["$"].date + "\n";
-        const weather =
-          result.weatherforecast.pref[0].area[1].info[0].weather[0] + "\n";
-        const detail =
-          result.weatherforecast.pref[0].area[1].info[0].weather_detail[0] +
-          "\n";
-        const max =
-          "最高気温は" +
-          result.weatherforecast.pref[0].area[1].info[0].temperature[0].range[0]
-            ._ +
-          "度\n";
-        const min =
-          "最低気温は" +
-          result.weatherforecast.pref[0].area[1].info[0].temperature[0].range[1]
-            ._ +
-          "度です";
-        const message =
-          "今日の天気予報です\n" + day + weather + detail + max + min;
-        console.log(message);
-        return message;
-      });
-    } else {
-      console.log(error + " : " + response);
-    }
+  return new Promise((resolve, reject) => {
+    request(url, (error, response, body) => {
+      if (!error && response.statusCode == 200) {
+        parseString(body, (err, result) => {
+          const day =
+            result.weatherforecast.pref[0].area[1].info[0]["$"].date + "\n";
+          const weather =
+            result.weatherforecast.pref[0].area[1].info[0].weather[0] + "\n";
+          const detail =
+            result.weatherforecast.pref[0].area[1].info[0].weather_detail[0] +
+            "\n";
+          const max =
+            "最高気温は" +
+            result.weatherforecast.pref[0].area[1].info[0].temperature[0]
+              .range[0]._ +
+            "度\n";
+          const min =
+            "最低気温は" +
+            result.weatherforecast.pref[0].area[1].info[0].temperature[0]
+              .range[1]._ +
+            "度です";
+          const message =
+            "今日の天気予報です\n" + day + weather + detail + max + min;
+          resolve(message);
+        });
+      } else {
+        console.log(error + " : " + response);
+        reject(error);
+      }
+    });
   });
 }
 
