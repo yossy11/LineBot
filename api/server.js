@@ -5,7 +5,9 @@ const line = require("@line/bot-sdk");
 const request = require("request");
 const parseString = require("xml2js").parseString;
 const PORT = 3000;
-const url = "http://www.drk7.jp/weather/xml/12.xml";
+const weatherURL = "http://www.drk7.jp/weather/xml/12.xml";
+const simple_wikipedia_api = "http://wikipedia.simpleapi.net/api";
+const pattern = /(.*)って(なに|何)(？|\?)?$/;
 
 const config = {
   channelSecret: process.env.SECRET,
@@ -39,6 +41,10 @@ async function makeText(text) {
   if (text === "天気") {
     const message = await getWeather();
     return message;
+  } else if (text.match(pattern)) {
+    const str = text.match(pattern)[1];
+    const message = await getWikipediaUrlAndBody(str);
+    return message;
   } else {
     return text;
   }
@@ -46,7 +52,7 @@ async function makeText(text) {
 
 async function getWeather() {
   return new Promise((resolve, reject) => {
-    request(url, (error, response, body) => {
+    request(weatherURL, (error, response, body) => {
       if (!error && response.statusCode == 200) {
         parseString(body, (err, result) => {
           const day =
@@ -70,6 +76,35 @@ async function getWeather() {
             "今日の天気予報です\n" + day + weather + detail + max + min;
           resolve(message);
         });
+      } else {
+        console.log(error + " : " + response);
+        reject(error);
+      }
+    });
+  });
+}
+
+async function getWikipediaUrlAndBody(str) {
+  const url =
+    simple_wikipedia_api +
+    "?keyword=" +
+    encodeURIComponent(str) +
+    "&output=json";
+  const options = {
+    url: url,
+    method: "GET",
+    json: true,
+  };
+  return new Promise((resolve, reject) => {
+    request(options, (error, response, body) => {
+      if (!error && response.statusCode == 200) {
+        const message = [
+          "説明しよう！" + str + "とは！",
+          response.body[0].body.substr(0, 140) + "...",
+          "続きは",
+          response.body[0].url,
+        ];
+        resolve(message);
       } else {
         console.log(error + " : " + response);
         reject(error);
