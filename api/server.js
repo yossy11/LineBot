@@ -11,15 +11,9 @@ const horoscopeURL = "http://api.jugemkey.jp/api/horoscope/free/";
 const wikiPattern = /(.*)って(なに|何)(？|\?)?$/;
 const horoscopePattern = /牡羊座|牡牛座|双子座|蟹座|獅子座|乙女座|天秤座|蠍座|射手座|山羊座|水瓶座|魚座/;
 
-// const config = {
-//   channelSecret: process.env.SECRET,
-//   channelAccessToken: process.env.ACCESSTOKEN,
-// };
-
 const config = {
-  channelSecret: "e789dde58c5d44eb3682661bc6dac198",
-  channelAccessToken:
-    "dMIDrt8yE+l4Y41sIi8tZZXGOiQsZlmhHLDA3mEDO4XlTaXOms8t/gFO2Wjwd9FXSLHK5L5ux0iTAkKkLIk7WkOIXNNY3YHYYii394pgKw9NKZVYyt5N1AQJpFBjck/jm2VCLDLr38KBFEdHKoy7IQdB04t89/1O/w1cDnyilFU=",
+  channelSecret: process.env.SECRET,
+  channelAccessToken: process.env.ACCESSTOKEN,
 };
 
 const app = express();
