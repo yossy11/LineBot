@@ -104,7 +104,7 @@ async function getWikipediaUrlAndBody(str) {
           "続きは",
           response.body[0].url,
         ];
-        resolve(message);
+        resolve(message.join("\n"));
       } else {
         console.log(error + " : " + response);
         reject(error);
