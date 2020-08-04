@@ -7,7 +7,9 @@ const parseString = require("xml2js").parseString;
 const PORT = 3000;
 const weatherURL = "http://www.drk7.jp/weather/xml/12.xml";
 const simple_wikipedia_api = "http://wikipedia.simpleapi.net/api";
-const pattern = /(.*)って(なに|何)(？|\?)?$/;
+const horoscopeURL = "http://api.jugemkey.jp/api/horoscope/free/";
+const wikiPattern = /(.*)って(なに|何)(？|\?)?$/;
+const horoscopePattern = /牡羊座|牡牛座|双子座|蟹座|獅子座|乙女座|天秤座|蠍座|射手座|山羊座|水瓶座|魚座/;
 
 const config = {
   channelSecret: process.env.SECRET,
@@ -41,9 +43,13 @@ async function makeText(text) {
   if (text === "天気") {
     const message = await getWeather();
     return message;
-  } else if (text.match(pattern)) {
+  } else if (text.match(wikiPattern)) {
     const str = text.match(pattern)[1];
     const message = await getWikipediaUrlAndBody(str);
+    return message;
+  } else if (text.match(horoscopePattern)) {
+    const str = text.match(pattern)[0];
+    const message = await getHoroscope(str);
     return message;
   } else {
     return text;
@@ -112,6 +118,40 @@ async function getWikipediaUrlAndBody(str) {
     });
   });
 }
+
+async function getHoroscope(str) {
+  const today = formDate();
+  const options = {
+    url: horoscopeURL + today,
+    method: "GET",
+    json: true,
+  };
+  return new Promise((resolve, reject) => {
+    request(options, (error, response, body) => {
+      if (!error && response.statusCode == 200) {
+        const results = response.body.horoscope[today];
+        const result = results.find((element) => element.sign === str);
+        const message = [
+          "今日の" + str + "の運勢は" + result.rank + "位！",
+          result.content,
+          "ラッキーアイテムは" + result.item,
+          "ラッキーカラーは" + result.color + "だよ",
+        ];
+        resolve(message.join("\n"));
+      } else {
+        console.log(error + " : " + response);
+        reject(error);
+      }
+    });
+  });
+}
+
+const formDate = () => {
+  const today = new Date();
+  let month = String(today.getMonth() + 1);
+  month = month.length < 2 ? "0" + month : month;
+  return [today.getFullYear(), month, today.getDate()].join("/");
+};
 
 process.env.NOW_REGION ? (module.exports = app) : app.listen(PORT);
 console.log(`Server running at ${PORT}`);
