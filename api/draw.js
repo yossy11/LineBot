@@ -79,6 +79,7 @@ module.exports = () => {
       .text(function (d) {
         return d.properties.value;
       })
+      .style("font-family", "sans-serif")
       .style("font-size", "10px")
       .style("fill", "red");
 
@@ -87,6 +88,7 @@ module.exports = () => {
       .attr("x", 300)
       .attr("y", 300)
       .text(data.lastmodifed)
+      .style("font-family", "sans-serif")
       .style("font-size", "100px")
       .style("fill", "red");
   };
