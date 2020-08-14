@@ -1,6 +1,7 @@
 module.exports = () => {
   const d3 = require("d3");
   const fs = require("fs");
+  const { join } = require("path");
   const request = require("request");
   const fabric = require("fabric").fabric;
   const { JSDOM } = require("jsdom");
