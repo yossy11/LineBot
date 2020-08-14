@@ -17,19 +17,20 @@ module.exports = () => {
     if (err) {
       console.error(err);
     }
-    fs.writeFileSync(
-      join(__dirname, "result.json"),
-      JSON.stringify(response.body)
-    );
+    // fs.writeFileSync(
+    //   join(__dirname, "result.json"),
+    //   JSON.stringify(response.body)
+    // );
 
     console.log("bp1");
     const japan = JSON.parse(
       fs.readFileSync(join(__dirname, "japan.geojson"), "utf8")
     );
     console.log("bp2");
-    const infectionData = JSON.parse(
-      fs.readFileSync(join(__dirname, "result.json"), "utf-8")
-    );
+    // const infectionData = JSON.parse(
+    //   fs.readFileSync(join(__dirname, "result.json"), "utf-8")
+    // );
+    const infectionData = response.body;
     console.log("bp3");
     const width = 2000;
     const height = 2000;
