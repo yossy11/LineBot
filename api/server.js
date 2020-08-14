@@ -26,7 +26,7 @@ base64Data.then((result) => {
   app.get("/result", function (req, res) {
     const img = Buffer.from(result, "base64");
     res.writeHead(200, {
-      "Content-Type": "image/png;UTF-8",
+      "Content-Type": "image/png; charset=utf-8",
       "Content-Length": img.length,
     });
     res.end(img);
