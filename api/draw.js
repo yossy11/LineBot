@@ -5,9 +5,6 @@ module.exports = () => {
   const request = require("request");
   const fabric = require("fabric").fabric;
   const document = new JSDOM().window.document;
-  global.navigator = {
-    userAgent: "node.js",
-  };
   const url =
     "https://www3.nhk.or.jp/news/special/coronavirus/data/latest-pref-data.json";
   const options = {
