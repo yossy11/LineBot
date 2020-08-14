@@ -79,7 +79,7 @@ module.exports = () => {
       .text(function (d) {
         return d.properties.value;
       })
-      .attr("font-family", "sans-serif")
+      .attr("font-family", "Times New Roman")
       .style("font-size", "10px")
       .style("fill", "blue");
 
