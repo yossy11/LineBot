@@ -1,15 +1,9 @@
 module.exports = () => {
-  console.log("started");
   const d3 = require("d3");
-  console.log("d3");
   const fs = require("fs");
-  console.log("fs");
   const request = require("request");
-  console.log("request");
   const fabric = require("fabric").fabric;
-  console.log("fabric");
   const { JSDOM } = require("jsdom");
-  console.log("jsdom");
   const document = new JSDOM().window.document;
   const url =
     "https://www3.nhk.or.jp/news/special/coronavirus/data/latest-pref-data.json";
@@ -22,22 +16,22 @@ module.exports = () => {
     if (err) {
       console.error(err);
     }
-    console.log("requested");
     fs.writeFile(
-      __dirname + "/result.json",
+      join(__dirname, "result.json"),
       JSON.stringify(response.body),
       function (err) {
         if (err) {
           console.log(err);
         }
-
+        console.log("bp1");
         const japan = JSON.parse(
-          fs.readFileSync(__dirname + "/japan.geojson", "utf8")
+          fs.readFileSync(join(__dirname, "japan.geojson"), "utf8")
         );
+        console.log("bp2");
         const infectionData = JSON.parse(
-          fs.readFileSync(__dirname + "/result.json", "utf-8")
+          fs.readFileSync(join(__dirname, "/result.json"), "utf-8")
         );
-        console.log("data inputted");
+        console.log("bp3");
         const width = 2000;
         const height = 2000;
         const scale = 3200;
@@ -125,7 +119,7 @@ module.exports = () => {
             .style("fill", "red");
         };
         createMap(japan, infectionData);
-
+        console.log("bp4");
         fabric.loadSVGFromString(
           document.body.innerHTML,
           (objects, options) => {
