@@ -16,6 +16,7 @@ module.exports = () => {
     if (err) {
       console.error(err);
     }
+    console.log("requested");
     fs.writeFile("./data/result.json", JSON.stringify(response.body), function (
       err
     ) {
