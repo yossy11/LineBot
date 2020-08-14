@@ -1,4 +1,5 @@
 module.exports = () => {
+  console.log("started");
   const d3 = require("d3");
   const { JSDOM } = require("jsdom");
   const fs = require("fs");
