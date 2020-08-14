@@ -5,6 +5,7 @@ const line = require("@line/bot-sdk");
 const request = require("request");
 const parseString = require("xml2js").parseString;
 const PORT = 3000;
+const imageURL = "https://line-bot-delta.vercel.app/result";
 const weatherURL = "http://www.drk7.jp/weather/xml/12.xml";
 const simple_wikipedia_api = "http://wikipedia.simpleapi.net/api";
 const horoscopeURL = "http://api.jugemkey.jp/api/horoscope/free/";
@@ -19,18 +20,19 @@ const config = {
 const app = express();
 
 app.get("/", (req, res) => res.send("Hello LINE BOT!(GET)"));
-app.get("/result", function (req, res) {
-  const data = makeImage();
-  const img = Buffer.from(data, "base64");
-  res.writeHead(200, {
-    "Content-Type": "image/png",
-    "Content-Length": img.length,
+
+const base64Data = makeImage();
+base64Data.then((result) => {
+  app.get("/result", function (req, res) {
+    const img = Buffer.from(result, "base64");
+    res.writeHead(200, {
+      "Content-Type": "image/png",
+      "Content-Length": img.length,
+    });
+    res.end(img);
   });
-  res.end(img);
 });
-// app.get("/result", (req, res) =>
-//   res.sendFile("result.png", { root: __dirname })
-// );
+
 app.post("/webhook", line.middleware(config), (req, res) => {
   console.log(req.body.events);
   Promise.all(req.body.events.map(handleEvent)).then((result) =>
@@ -51,12 +53,10 @@ async function handleEvent(event) {
 async function makeReply(event) {
   const text = event.message.text;
   if (text === "コロナ") {
-    console.log("going to make image...");
-    makeImage();
     return client.replyMessage(event.replyToken, {
       type: "image",
-      originalContentUrl: "https://line-bot-delta.vercel.app/result",
-      previewImageUrl: "https://line-bot-delta.vercel.app/result",
+      originalContentUrl: imageURL,
+      previewImageUrl: imageURL,
     });
   }
   let message = text;
@@ -172,5 +172,17 @@ const formDate = () => {
   return [today.getFullYear(), month, today.getDate()].join("/");
 };
 
+setInterval(() => {
+  makeImage().then((result) => {
+    app.get("/result", function (req, res) {
+      const img = Buffer.from(result, "base64");
+      res.writeHead(200, {
+        "Content-Type": "image/png",
+        "Content-Length": img.length,
+      });
+      res.end(img);
+    });
+  });
+}, 43200000);
 process.env.NOW_REGION ? (module.exports = app) : app.listen(PORT);
 console.log(`Server running at ${PORT}`);

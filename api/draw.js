@@ -1,5 +1,4 @@
 module.exports = () => {
-  let base64Data;
   const d3 = require("d3");
   const fs = require("fs");
   const { join } = require("path");
@@ -14,28 +13,11 @@ module.exports = () => {
     method: "GET",
     json: true,
   };
-  request(options, (err, response, body) => {
-    if (err) {
-      console.error(err);
-    }
-    // fs.writeFileSync(
-    //   join(__dirname, "result.json"),
-    //   JSON.stringify(response.body)
-    // );
+  const width = 2000;
+  const height = 2000;
+  const scale = 3200;
 
-    console.log("bp1");
-    const japan = JSON.parse(
-      fs.readFileSync(join(__dirname, "japan.geojson"), "utf8")
-    );
-    console.log("bp2");
-    // const infectionData = JSON.parse(
-    //   fs.readFileSync(join(__dirname, "result.json"), "utf-8")
-    // );
-    const infectionData = response.body;
-    console.log("bp3");
-    const width = 2000;
-    const height = 2000;
-    const scale = 3200;
+  const createMap = (japan, data) => {
     const svg = d3
       .select(document.body)
       .append("svg")
@@ -47,12 +29,8 @@ module.exports = () => {
       .translate([width / 2, height / 2])
       .scale(scale);
     const geoPath = d3.geoPath(projection);
-    const maxValue = Math.max(
-      ...infectionData.data47.map((d) => Number(d.new))
-    );
-    const minValue = Math.min(
-      ...infectionData.data47.map((d) => Number(d.new))
-    );
+    const maxValue = Math.max(...data.data47.map((d) => Number(d.new)));
+    const minValue = Math.min(...data.data47.map((d) => Number(d.new)));
     const color = d3
       .scaleQuantize()
       .domain([minValue, maxValue])
@@ -65,78 +43,74 @@ module.exports = () => {
         "rgb(205,109,44)",
         "rgb(162,81,29)",
       ]);
-    const createMap = (japan, data) => {
-      for (let i = 0; i < 47; i++) {
-        const dataState = data.data47[i].name;
-        const dataValue = parseFloat(data.data47[i].new);
-        for (let j = 0; j < japan.features.length; j++) {
-          const jsonState = japan.features[j].properties.name_local;
-          if (dataState == jsonState) {
-            japan.features[j].properties.value = dataValue;
-            japan.features[j].properties.quantizedValue = color(dataValue);
-            break;
-          }
+    for (let i = 0; i < 47; i++) {
+      const dataState = data.data47[i].name;
+      const dataValue = parseFloat(data.data47[i].new);
+      for (let j = 0; j < japan.features.length; j++) {
+        const jsonState = japan.features[j].properties.name_local;
+        if (dataState == jsonState) {
+          japan.features[j].properties.value = dataValue;
+          japan.features[j].properties.quantizedValue = color(dataValue);
+          break;
         }
       }
-      const map = svg
-        .selectAll("path")
-        .data(japan.features)
-        .enter()
-        .append("path")
-        .attr("d", geoPath)
-        .style("stroke", "#ffffff")
-        .style("stroke-width", 0.1)
-        .style("fill", (d) => d.properties.quantizedValue);
+    }
+    const map = svg
+      .selectAll("path")
+      .data(japan.features)
+      .enter()
+      .append("path")
+      .attr("d", geoPath)
+      .style("stroke", "#ffffff")
+      .style("stroke-width", 0.1)
+      .style("fill", (d) => d.properties.quantizedValue);
 
-      svg
-        .selectAll("text")
-        .data(japan.features)
-        .enter()
-        .append("text")
-        .attr("x", function (d) {
-          return projection([d.properties.longitude, d.properties.latitude])[0];
-        })
-        .attr("y", function (d) {
-          return projection([d.properties.longitude, d.properties.latitude])[1];
-        })
-        .text(function (d) {
-          return d.properties.value;
-        })
-        .style("font-size", "10px")
-        .style("fill", "red");
+    svg
+      .selectAll("text")
+      .data(japan.features)
+      .enter()
+      .append("text")
+      .attr("x", function (d) {
+        return projection([d.properties.longitude, d.properties.latitude])[0];
+      })
+      .attr("y", function (d) {
+        return projection([d.properties.longitude, d.properties.latitude])[1];
+      })
+      .text(function (d) {
+        return d.properties.value;
+      })
+      .style("font-size", "10px")
+      .style("fill", "red");
 
-      svg
-        .append("text")
-        .attr("x", 300)
-        .attr("y", 300)
-        .text(data.lastmodifed)
-        .style("font-size", "100px")
-        .style("fill", "red");
-    };
-    createMap(japan, infectionData);
-    console.log("bp4");
-    fabric.loadSVGFromString(document.body.innerHTML, (objects, options) => {
-      const canvas = new fabric.Canvas("c", {
-        width: width,
-        height: height,
+    svg
+      .append("text")
+      .attr("x", 300)
+      .attr("y", 300)
+      .text(data.lastmodifed)
+      .style("font-size", "100px")
+      .style("fill", "red");
+  };
+  return new Promise((resolve, reject) => {
+    request(options, (err, response, body) => {
+      if (err) {
+        console.error(err);
+      }
+      const japan = JSON.parse(
+        fs.readFileSync(join(__dirname, "japan.geojson"), "utf8")
+      );
+      const infectionData = body;
+      createMap(japan, infectionData);
+      fabric.loadSVGFromString(document.body.innerHTML, (objects, options) => {
+        const canvas = new fabric.Canvas("c", {
+          width: width,
+          height: height,
+        });
+        const svgGroups = fabric.util.groupSVGElements(objects, options);
+        canvas.add(svgGroups).renderAll();
+        const result = canvas.toDataURL("png");
+        const base64Data = result.replace(/^data:image\/png;base64,/, "");
+        resolve(base64Data);
       });
-      const svgGroups = fabric.util.groupSVGElements(objects, options);
-      canvas.add(svgGroups).renderAll();
-      const result = canvas.toDataURL("png");
-      base64Data = result.replace(/^data:image\/png;base64,/, "");
-      // fs.writeFile(
-      //   join(__dirname, "result.png"),
-      //   base64Data,
-      //   "base64",
-      //   (err) => {
-      //     if (err) {
-      //       console.log(err);
-      //       throw err;
-      //     }
-      //     console.log("保存できたよ");
-      //   }
-      // );
     });
   });
-  return base64Data;
 };
