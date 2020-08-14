@@ -132,13 +132,18 @@ module.exports = () => {
             canvas.add(svgGroups).renderAll();
             const result = canvas.toDataURL("png");
             const base64Data = result.replace(/^data:image\/png;base64,/, "");
-            fs.writeFile("./api/result.png", base64Data, "base64", (err) => {
-              if (err) {
-                console.log(err);
-                throw err;
+            fs.writeFile(
+              join(__dirname, "result.png"),
+              base64Data,
+              "base64",
+              (err) => {
+                if (err) {
+                  console.log(err);
+                  throw err;
+                }
+                console.log("保存できたよ");
               }
-              console.log("保存できたよ");
-            });
+            );
           }
         );
       }

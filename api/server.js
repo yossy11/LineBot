@@ -20,7 +20,7 @@ const app = express();
 
 app.get("/", (req, res) => res.send("Hello LINE BOT!(GET)"));
 app.get("/result", (req, res) =>
-  res.sendFile("./result.png", { root: __dirname })
+  res.sendFile("result.png", { root: __dirname })
 );
 app.post("/webhook", line.middleware(config), (req, res) => {
   console.log(req.body.events);
