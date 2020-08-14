@@ -4,6 +4,9 @@
   "main": "index.js",
   "author": "yossy11 <srnnds50aky1@yahoo.co.jp>",
   "license": "MIT",
+  "scripts": {
+    "now-build": "yum install libuuid-devel libmount-devel && cp /lib64/{libuuid,libmount,libblkid}.so.1 node_modules/canvas/build/Release/ && npm run build"
+  },
   "dependencies": {
     "@line/bot-sdk": "^7.0.0",
     "canvas": "^2.6.1",
