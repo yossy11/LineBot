@@ -24,7 +24,7 @@ module.exports = () => {
     }
     console.log("requested");
     fs.writeFile(
-      __dirname + "./data/result.json",
+      __dirname + "../data/result.json",
       JSON.stringify(response.body),
       function (err) {
         if (err) {
@@ -32,10 +32,10 @@ module.exports = () => {
         }
 
         const japan = JSON.parse(
-          fs.readFileSync(__dirname + "./data/japan.geojson", "utf8")
+          fs.readFileSync(__dirname + "../data/japan.geojson", "utf8")
         );
         const infectionData = JSON.parse(
-          fs.readFileSync(__dirname + "./data/result.json", "utf-8")
+          fs.readFileSync(__dirname + "../data/result.json", "utf-8")
         );
         console.log("data inputted");
         const width = 2000;
