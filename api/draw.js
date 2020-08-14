@@ -81,7 +81,7 @@ module.exports = () => {
       })
       .attr("font-family", "sans-serif")
       .style("font-size", "10px")
-      .style("fill", "red");
+      .style("fill", "blue");
 
     // svg
     //   .append("text")
