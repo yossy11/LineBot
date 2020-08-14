@@ -42,6 +42,7 @@ async function handleEvent(event) {
 async function makeReply(event) {
   const text = event.message.text;
   if (text === "コロナ") {
+    console.log("going to make image...");
     makeImage();
     return client.replyMessage(event.replyToken, {
       type: "image",

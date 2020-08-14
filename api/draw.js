@@ -27,6 +27,7 @@ module.exports = () => {
       const infectionData = JSON.parse(
         fs.readFileSync("./data/result.json", "utf-8")
       );
+      console.log("data inputted");
       const width = 2000;
       const height = 2000;
       const scale = 3200;
