@@ -1,10 +1,15 @@
 module.exports = () => {
   console.log("started");
   const d3 = require("d3");
+  console.log("d3");
   const { JSDOM } = require("jsdom");
+  console.log("jsdom");
   const fs = require("fs");
+  console.log("fs");
   const request = require("request");
+  console.log("request");
   const fabric = require("fabric").fabric;
+  console.log("fabric");
   const document = new JSDOM().window.document;
   const url =
     "https://www3.nhk.or.jp/news/special/coronavirus/data/latest-pref-data.json";
