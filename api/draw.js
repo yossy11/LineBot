@@ -1,4 +1,5 @@
 module.exports = () => {
+  let base64Data;
   const d3 = require("d3");
   const fs = require("fs");
   const { join } = require("path");
@@ -122,19 +123,20 @@ module.exports = () => {
       const svgGroups = fabric.util.groupSVGElements(objects, options);
       canvas.add(svgGroups).renderAll();
       const result = canvas.toDataURL("png");
-      const base64Data = result.replace(/^data:image\/png;base64,/, "");
-      fs.writeFile(
-        join(__dirname, "result.png"),
-        base64Data,
-        "base64",
-        (err) => {
-          if (err) {
-            console.log(err);
-            throw err;
-          }
-          console.log("保存できたよ");
-        }
-      );
+      base64Data = result.replace(/^data:image\/png;base64,/, "");
+      // fs.writeFile(
+      //   join(__dirname, "result.png"),
+      //   base64Data,
+      //   "base64",
+      //   (err) => {
+      //     if (err) {
+      //       console.log(err);
+      //       throw err;
+      //     }
+      //     console.log("保存できたよ");
+      //   }
+      // );
     });
   });
+  return base64Data;
 };

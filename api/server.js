@@ -19,9 +19,18 @@ const config = {
 const app = express();
 
 app.get("/", (req, res) => res.send("Hello LINE BOT!(GET)"));
-app.get("/result", (req, res) =>
-  res.sendFile("result.png", { root: __dirname })
-);
+app.get("/result", function (req, res) {
+  const data = makeImage();
+  const img = Buffer.from(data, "base64");
+  res.writeHead(200, {
+    "Content-Type": "image/png",
+    "Content-Length": img.length,
+  });
+  res.end(img);
+});
+// app.get("/result", (req, res) =>
+//   res.sendFile("result.png", { root: __dirname })
+// );
 app.post("/webhook", line.middleware(config), (req, res) => {
   console.log(req.body.events);
   Promise.all(req.body.events.map(handleEvent)).then((result) =>
