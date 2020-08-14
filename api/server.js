@@ -1,5 +1,5 @@
 "use strict";
-
+const makeImage = require("./draw.js");
 const express = require("express");
 const line = require("@line/bot-sdk");
 const request = require("request");
@@ -19,6 +19,9 @@ const config = {
 const app = express();
 
 app.get("/", (req, res) => res.send("Hello LINE BOT!(GET)"));
+app.get("/result", (req, res) =>
+  res.sendFile("./result.png", { root: __dirname })
+);
 app.post("/webhook", line.middleware(config), (req, res) => {
   console.log(req.body.events);
   Promise.all(req.body.events.map(handleEvent)).then((result) =>
@@ -32,28 +35,34 @@ async function handleEvent(event) {
   if (event.type !== "message" || event.message.type !== "text") {
     return Promise.resolve(null);
   }
-  const message = await makeText(event.message.text);
+  const reply = await makeReply(event);
+  return reply;
+}
+
+async function makeReply(event) {
+  const text = event.message.text;
+  if (text === "コロナ") {
+    makeImage();
+    return client.replyMessage(event.replyToken, {
+      type: "image",
+      originalContentUrl: "https://line-bot-delta.vercel.app/result",
+      previewImageUrl: "https://line-bot-delta.vercel.app/result",
+    });
+  }
+  let message = text;
+  if (text === "天気") {
+    message = await getWeather();
+  } else if (text.match(wikiPattern)) {
+    const str = text.match(wikiPattern)[1];
+    message = await getWikipediaUrlAndBody(str);
+  } else if (text.match(horoscopePattern)) {
+    const str = text.match(horoscopePattern)[0];
+    message = await getHoroscope(str);
+  }
   return client.replyMessage(event.replyToken, {
     type: "text",
     text: message,
   });
-}
-
-async function makeText(text) {
-  if (text === "天気") {
-    const message = await getWeather();
-    return message;
-  } else if (text.match(wikiPattern)) {
-    const str = text.match(wikiPattern)[1];
-    const message = await getWikipediaUrlAndBody(str);
-    return message;
-  } else if (text.match(horoscopePattern)) {
-    const str = text.match(horoscopePattern)[0];
-    const message = await getHoroscope(str);
-    return message;
-  } else {
-    return text;
-  }
 }
 
 async function getWeather() {
