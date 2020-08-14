@@ -86,16 +86,9 @@ module.exports = () => {
       .append("text")
       .attr("x", 300)
       .attr("y", 300)
-      .text("hereee")
+      .text(data.lastmodifed)
       .style("font-size", "100px")
       .style("fill", "red");
-    // svg
-    //   .append("text")
-    //   .attr("x", 300)
-    //   .attr("y", 300)
-    //   .text(data.lastmodifed)
-    //   .style("font-size", "100px")
-    //   .style("fill", "red");
   };
   return new Promise((resolve, reject) => {
     request(options, (err, response, body) => {
