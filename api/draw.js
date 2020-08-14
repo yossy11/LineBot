@@ -64,13 +64,6 @@ module.exports = () => {
       .style("stroke", "#ffffff")
       .style("stroke-width", 0.1)
       .style("fill", (d) => d.properties.quantizedValue);
-    svg
-      .append("text")
-      .attr("x", 300)
-      .attr("y", 300)
-      .text("hereee")
-      .style("font-size", "100px")
-      .style("fill", "red");
 
     svg
       .selectAll("text")
@@ -89,6 +82,13 @@ module.exports = () => {
       .style("font-size", "10px")
       .style("fill", "red");
 
+    svg
+      .append("text")
+      .attr("x", 300)
+      .attr("y", 300)
+      .text("hereee")
+      .style("font-size", "100px")
+      .style("fill", "red");
     // svg
     //   .append("text")
     //   .attr("x", 300)
