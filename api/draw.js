@@ -102,7 +102,9 @@ module.exports = () => {
       );
       const infectionData = body;
       createMap(japan, infectionData);
-      fabric.loadSVGFromString(document.body.innerHTML, (objects, options) => {
+      const innerData = fs.readFileSync(join(__dirname, "inner.txt"), "utf8");
+      fabric.loadSVGFromString(innerData, (objects, options) => {
+        // fabric.loadSVGFromString(document.body.innerHTML, (objects, options) => {
         const canvas = new fabric.Canvas("c", {
           width: width,
           height: height,

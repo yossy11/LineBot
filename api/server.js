@@ -3,8 +3,6 @@ const makeImage = require("./draw.js");
 const express = require("express");
 const line = require("@line/bot-sdk");
 const request = require("request");
-const fs = require("fs");
-const { join } = require("path");
 const parseString = require("xml2js").parseString;
 const PORT = 3000;
 const imageURL = "https://line-bot-delta.vercel.app/result";
@@ -26,8 +24,7 @@ app.get("/", (req, res) => res.send("Hello LINE BOT!(GET)"));
 const base64Data = makeImage();
 base64Data.then((result) => {
   app.get("/result", function (req, res) {
-    const base64 = fs.readFileSync(join(__dirname, "base.txt"), "utf8");
-    const img = Buffer.from(base64, "base64");
+    const img = Buffer.from(result, "base64");
     res.writeHead(200, {
       "Content-Type": "image/png;charset=utf-8",
       "Content-Length": img.length,
