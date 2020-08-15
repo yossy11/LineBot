@@ -102,20 +102,18 @@ module.exports = () => {
       );
       const infectionData = body;
       createMap(japan, infectionData);
-      const innerData = fs.readFileSync(join(__dirname, "inner.txt"), "utf8");
-      fabric.loadSVGFromString(innerData, (objects, options) => {
-        // fabric.loadSVGFromString(document.body.innerHTML, (objects, options) => {
+      fabric.loadSVGFromString(document.body.innerHTML, (objects, options) => {
+        const str = document.body.innerHTML.substr(-200);
+        console.log(str);
         const canvas = new fabric.Canvas("c", {
           width: width,
           height: height,
         });
-        setTimeout(function () {
-          const svgGroups = fabric.util.groupSVGElements(objects, options);
-          canvas.add(svgGroups).renderAll();
-          const result = canvas.toDataURL("png");
-          const base64Data = result.replace(/^data:image\/png;base64,/, "");
-          resolve(base64Data);
-        }, 2000);
+        const svgGroups = fabric.util.groupSVGElements(objects, options);
+        canvas.add(svgGroups).renderAll();
+        const result = canvas.toDataURL("png");
+        const base64Data = result.replace(/^data:image\/png;base64,/, "");
+        resolve(base64Data);
       });
     });
   });
