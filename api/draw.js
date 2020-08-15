@@ -79,7 +79,7 @@ module.exports = () => {
       .text(function (d) {
         return d.properties.value;
       })
-      .style("font-family", "sans-serif")
+      .style("font-family", "DejaVu Sans")
       .style("font-size", "10px")
       .style("fill", "red");
 
