@@ -24,7 +24,6 @@ app.get("/", (req, res) => res.send("Hello LINE BOT!(GET)"));
 const base64Data = makeImage();
 base64Data.then((result) => {
   app.get("/result", function (req, res) {
-    console.log(result);
     const img = Buffer.from(result, "base64");
     res.writeHead(200, {
       "Content-Type": "image/png;charset=utf-8",
