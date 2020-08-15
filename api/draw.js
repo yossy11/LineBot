@@ -83,14 +83,14 @@ module.exports = () => {
       .style("font-size", "10px")
       .style("fill", "blue");
 
-    // svg
-    //   .append("text")
-    //   .attr("x", 300)
-    //   .attr("y", 300)
-    //   .text(data.lastmodifed)
-    //   .style("font-family", "sans-serif")
-    //   .style("font-size", "100px")
-    //   .style("fill", "red");
+    svg
+      .append("text")
+      .attr("x", 300)
+      .attr("y", 300)
+      .text(data.lastmodifed)
+      .style("font-family", "sans-serif")
+      .style("font-size", "100px")
+      .style("fill", "red");
   };
   return new Promise((resolve, reject) => {
     request(options, (err, response, body) => {
@@ -103,8 +103,6 @@ module.exports = () => {
       const infectionData = body;
       createMap(japan, infectionData);
       fabric.loadSVGFromString(document.body.innerHTML, (objects, options) => {
-        const str = document.body.innerHTML.substr(-200);
-        console.log(str);
         const canvas = new fabric.Canvas("c", {
           width: width,
           height: height,
