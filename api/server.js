@@ -4,6 +4,7 @@ const express = require("express");
 const line = require("@line/bot-sdk");
 const request = require("request");
 const fs = require("fs");
+const { join } = require("path");
 const parseString = require("xml2js").parseString;
 const PORT = 3000;
 const imageURL = "https://line-bot-delta.vercel.app/result";
