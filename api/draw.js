@@ -81,7 +81,7 @@ module.exports = () => {
       })
       .style("font-family", "DejaVu Sans")
       .style("font-size", "10px")
-      .style("fill", "red");
+      .style("fill", "blue");
 
     // svg
     //   .append("text")
