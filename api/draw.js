@@ -109,11 +109,13 @@ module.exports = () => {
           width: width,
           height: height,
         });
-        const svgGroups = fabric.util.groupSVGElements(objects, options);
-        canvas.add(svgGroups).renderAll();
-        const result = canvas.toDataURL("png");
-        const base64Data = result.replace(/^data:image\/png;base64,/, "");
-        resolve(base64Data);
+        setTimeout(function () {
+          const svgGroups = fabric.util.groupSVGElements(objects, options);
+          canvas.add(svgGroups).renderAll();
+          const result = canvas.toDataURL("png");
+          const base64Data = result.replace(/^data:image\/png;base64,/, "");
+          resolve(base64Data);
+        }, 2000);
       });
     });
   });
